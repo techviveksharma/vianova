@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vianova — Mods Marketplace</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0d10; --card:#12151a; --muted:#a5adbb; --text:#e6ebf2; --accent:#5dd5c4; --accent2:#6fa8ff;
+  --danger:#ff6b6b; --ok:#39d98a; --warn:#f7c948;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+img{max-width:100%;display:block}
+
+.app{display:flex;flex-direction:column;min-height:100dvh;}
+
+/* Splash */
+#splash{
+  position:fixed;inset:0;background:linear-gradient(160deg,#0b0d10 0%,#12151a 50%,#0b0d10 100%);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:9999;
+}
+.logo-letters{display:flex;gap:.1em;font-weight:700;font-size:40px;letter-spacing:.04em}
+.logo-letters span{opacity:0;transform:translateY(10px);transition:all .35s}
+.logo-sub{opacity:0;margin-top:10px;font-size:12px;color:var(--muted);letter-spacing:.25em;text-transform:uppercase}
+.logo-letters.ready span{opacity:1;transform:translateY(0)}
+.logo-sub.show{opacity:1}
+
+/* Topbar */
+.topbar{
+  position:sticky;top:0;z-index:10;background:rgba(18,21,26,.8);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #1c2230;
+}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700}
+.badge-pill{padding:2px 8px;border:1px solid #263042;border-radius:999px;font-size:11px;color:var(--muted)}
+
+/* Content area */
+.main{flex:1; padding-bottom:72px}
+.section{padding:16px}
+.h1{font-size:20px;font-weight:600;margin:8px 0 12px}
+.h2{font-size:16px;font-weight:600;margin:8px 0 12px;color:#c8d2e1}
+
+/* Cards */
+.card{background:var(--card);border:1px solid #1c2230;border-radius:14px;padding:14px}
+.grid{display:grid;gap:12px}
+.grid.two{grid-template-columns:repeat(2,1fr)}
+.grid.three{grid-template-columns:repeat(3,1fr)}
+@media(min-width:900px){.grid.two{grid-template-columns:repeat(3,1fr)} .grid.three{grid-template-columns:repeat(6,1fr)}}
+
+/* Dealer card */
+.dealer{display:flex;gap:12px;align-items:center}
+.dealer img{width:56px;height:56px;border-radius:10px;object-fit:cover}
+.tag{font-size:11px;padding:2px 6px;border-radius:999px;border:1px solid #2a3446;color:#c9d3e4}
+.tag.s1{border-color:var(--accent2)}
+.tag.s2{border-color:#9aa9ff}
+.tag.s3{border-color:#b6c5ff}
+.meta{color:var(--muted);font-size:12px}
+
+/* Inputs */
+.input, select{
+  width:100%;padding:12px 12px;border-radius:12px;border:1px solid #283244;background:#0e1116;color:var(--text);
+}
+.input:focus, select:focus{outline:none;border-color:#3a4a6b}
+.btn{padding:10px 14px;border:1px solid #2c3648;background:#11151b;border-radius:12px;color:#eaf0ff;cursor:pointer}
+.btn.primary{border-color:#2d4b4b;background:linear-gradient(180deg,#1b2c2b,#132423);color:#dbfffb}
+.btn.ghost{background:transparent}
+.btn.block{width:100%}
+.btn.small{padding:6px 10px;border-radius:10px;font-size:12px}
+
+/* Bottom tabbar */
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;height:64px;border-top:1px solid #1c2230;background:rgba(18,21,26,.9);
+  display:flex;justify-content:space-around;align-items:center;backdrop-filter:blur(8px);z-index:9;
+}
+.tab{display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--muted)}
+.tab.active{color:#eaf0ff}
+
+/* Modal */
+.modal{
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:10000;
+}
+.modal .sheet{width:min(520px,92%);background:var(--card);border:1px solid #263042;border-radius:16px;padding:18px}
+.modal.show{display:flex}
+
+/* Upload gallery previews */
+.preview-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.preview-row img{width:76px;height:76px;object-fit:cover;border-radius:8px;border:1px solid #243044}
+.helper{font-size:12px;color:var(--muted)}
+
+/* Pills list */
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{padding:8px 10px;border-radius:999px;border:1px solid #2a3446;color:#c9d3e4;font-size:12px}
+
+/* Toast */
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:80px;background:#0f141a;border:1px solid #2b3950;border-radius:12px;
+  padding:10px 14px;font-size:13px;color:#dbe6ff;display:none;z-index:10001;
+}
+.toast.show{display:block}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="logo-letters" id="logoLetters"></div>
+  <div class="logo-sub" id="logoSub">real mods • real dealers</div>
+</div>
+
+<div class="app" id="app" style="display:none;">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="brand"><i class="bi bi-lightning-charge-fill"></i><span id="brandTitle">Vianova</span></div>
+    <div class="actions">
+      <span class="badge-pill" id="roleBadge">Guest</span>
+      <button class="btn small" id="openAuthBtn"><i class="bi bi-person"></i> Login</button>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <!-- HOME -->
+    <div id="view-home" class="section">
+      <div class="card">
+        <div class="h1">Find mods for your ride</div>
+        <div class="grid two">
+          <select id="brandSelect">
+            <option value="">Select Brand</option>
+            <option>Maruti Suzuki</option><option>Hyundai</option><option>Tata</option><option>Mahindra</option>
+            <option>Honda</option><option>Kia</option><option>Toyota</option>
+          </select>
+          <input class="input" id="modelInput" placeholder="Model e.g. Ignis"/>
+        </div>
+        <div class="pills" style="margin-top:10px">
+          <span class="pill">Wraps</span><span class="pill">Alloys</span><span class="pill">Audio</span>
+          <span class="pill">Performance</span><span class="pill">Lighting</span><span class="pill">Detailing</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn primary" id="searchBtn"><i class="bi bi-search"></i> Search</button>
+          <button class="btn ghost" id="clearSearchBtn">Clear</button>
+        </div>
+      </div>
+
+      <div class="h2">Top Sponsored Dealers</div>
+      <div id="sponsoredGrid" class="grid"></div>
+
+      <div class="h2">Trending Builds</div>
+      <div id="trendingGrid" class="grid two"></div>
+    </div>
+
+    <!-- SEARCH -->
+    <div id="view-search" class="section" style="display:none">
+      <div class="h1">Search results</div>
+      <div id="resultsInfo" class="meta" style="margin-bottom:8px"></div>
+      <div id="resultsGrid" class="grid"></div>
+    </div>
+
+    <!-- FEED -->
+    <div id="view-feed" class="section" style="display:none">
+      <div class="h1">Explore</div>
+      <div id="feedList" class="grid"></div>
+    </div>
+
+    <!-- UPLOAD (Dealer only) -->
+    <div id="view-upload" class="section" style="display:none">
+      <div class="card">
+        <div class="h1">Upload your build</div>
+        <div class="grid two">
+          <select id="uBrand"><option value="">Brand</option><option>Maruti Suzuki</option><option>Hyundai</option><option>Tata</option><option>Mahindra</option><option>Honda</option><option>Kia</option><option>Toyota</option></select>
+          <input class="input" id="uModel" placeholder="Model (e.g. Ignis)">
+          <select id="uCategory"><option value="">Category</option><option>Wraps</option><option>Alloys</option><option>Audio</option><option>Performance</option><option>Lighting</option><option>Detailing</option></select>
+          <input class="input" id="uCaption" placeholder="Short caption (optional)">
+        </div>
+        <div style="margin-top:12px">
+          <label class="btn small"><input id="uPhotos" type="file" accept="image/*" multiple hidden> Select Photos</label>
+          <span class="helper" id="uCount">0 selected (need 10+)</span>
+          <div class="preview-row" id="uPreview"></div>
+        </div>
+        <div class="h2" style="margin-top:10px">Promote this model</div>
+        <div class="grid two" id="promoTiers">
+          <button data-rank="1" class="btn">1st Rank • ₹500 / 30 days</button>
+          <button data-rank="2" class="btn">2nd Rank • ₹450 / 30 days</button>
+          <button data-rank="3" class="btn">3rd Rank • ₹400 / 30 days</button>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="btn primary" id="publishBtn"><i class="bi bi-cloud-upload"></i> Publish</button>
+          <span class="helper">Promotion is optional—choose a slot to appear on top for that Brand/Model.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="view-profile" class="section" style="display:none">
+      <div class="card">
+        <div class="h1">Your profile</div>
+        <div id="profileInfo" class="meta"></div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn small" id="switchRoleBtn">Switch to Dealer/Viewer</button>
+          <button class="btn small" id="logoutBtn">Logout</button>
+        </div>
+      </div>
+      <div class="h2">Your promotions</div>
+      <div id="promoList" class="grid"></div>
+    </div>
+  </div>
+
+  <!-- Tabbar -->
+  <nav class="tabbar">
+    <a href="#" data-view="home" class="tab active"><i class="bi bi-house-fill"></i><span>Home</span></a>
+    <a href="#" data-view="search" class="tab"><i class="bi bi-search"></i><span>Search</span></a>
+    <a href="#" data-view="feed" class="tab"><i class="bi bi-collection-play-fill"></i><span>Feed</span></a>
+    <a href="#" data-view="upload" class="tab"><i class="bi bi-plus-square-fill"></i><span>Upload</span></a>
+    <a href="#" data-view="profile" class="tab"><i class="bi bi-person-fill"></i><span>Profile</span></a>
+  </nav>
+</div>
+
+<!-- Modals -->
+<div class="modal" id="roleModal">
+  <div class="sheet">
+    <div class="h1">How are you using Vianova?</div>
+    <div class="grid two">
+      <button class="btn primary" id="chooseDealer"><i class="bi bi-wrench-adjustable-circle"></i> I’m a Dealer</button>
+      <button class="btn" id="chooseViewer"><i class="bi bi-eye"></i> I’m just browsing</button>
+    </div>
+    <div class="helper" style="margin-top:8px">We’ll remember this. You can change it later in Profile.</div>
+  </div>
+</div>
+
+<div class="modal" id="authModal">
+  <div class="sheet">
+    <div class="h1">Login / Sign up</div>
+    <input class="input" id="authEmail" placeholder="Email or phone">
+    <input class="input" id="authPass" placeholder="Password" type="password" style="margin-top:8px">
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn primary" id="loginBtn">Login</button>
+      <button class="btn" id="signupBtn">Create account</button>
+      <button class="btn ghost" id="closeAuth">Cancel</button>
+    </div>
+    <div class="helper" style="margin-top:8px">Guests can browse everything. Login is required for Chat & Upload.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- CONFIG ---------- */
+const BRAND_NAME = "Vianova";
+const PRICING = {1:500, 2:450, 3:400};
+const PROMO_DAYS = 30;
+
+/* ---------- STATE ---------- */
+let state = {
+  user: null, // {id,name,role:'viewer'|'dealer'}
+  role: 'viewer',
+  chosenPromo: null, // {rank, brand, model, startsAt, endsAt}
+  mockDealers: [
+    {id:'d1', name:'WrapWorks Indore', city:'Indore', photo:'https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=600&auto=format&fit=crop', verified:true, rating:4.8},
+    {id:'d2', name:'Ignite Mods Pune', city:'Pune', photo:'https://images.unsplash.com/photo-1518553257224-5409c4e0b8f6?q=80&w=600&auto=format&fit=crop', verified:true, rating:4.6},
+    {id:'d3', name:'Torque Garage Delhi', city:'Delhi', photo:'https://images.unsplash.com/photo-1511300636408-a63a89df3482?q=80&w=600&auto=format&fit=crop', verified:false, rating:4.4},
+  ],
+  mockBuilds: [
+    {id:'b1', dealerId:'d1', brand:'Maruti Suzuki', model:'Ignis', category:'Wraps',
+     photos:[
+      'https://images.unsplash.com/photo-1511910849309-0dffb6d122f8?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1494972688394-4cc796f9e4c1?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1517026575980-3e1e2dedeab4?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1541443131879-4423e1d3e8a9?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1453491945771-a1e904948959?q=80&w=800&auto=format&fit=crop'
+     ],
+     caption:'Satin Grey full wrap + smoked tails', createdAt:Date.now()-86400000*6
+    },
+    {id:'b2', dealerId:'d2', brand:'Hyundai', model:'i20', category:'Alloys',
+     photos:[
+      'https://images.unsplash.com/photo-1536520002442-39764a41e987?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1503376780598-c1e6b51aa42a?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1519583236770-f3b3e1af9d1f?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1503376780784-5f4530b1b29f?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1511910849309-0dffb6d122f8?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1511300636408-a63a89df3482?q=80&w=800&auto=format&fit=crop'
+     ],
+     caption:'Gunmetal 17” with flush fit', createdAt:Date.now()-86400000*2
+    }
+  ],
+  // promotions keyed by brand|model with up to three ranks
+  promotions: loadPromos()
+};
+
+function loadPromos(){
+  const saved = JSON.parse(localStorage.getItem('promotions')||'{}');
+  // prune expired
+  const now = Date.now();
+  for(const key in saved){
+    for(const slot of [1,2,3]){
+      const p = saved[key]?.[slot];
+      if(p && p.endsAt < now){ delete saved[key][slot]; }
+    }
+  }
+  localStorage.setItem('promotions', JSON.stringify(saved));
+  return saved;
+}
+
+function savePromos(){ localStorage.setItem('promotions', JSON.stringify(state.promotions)); }
+
+/* ---------- UTIL ---------- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+function keyBrandModel(brand, model){ return (brand||'').trim().toLowerCase()+"|"+(model||'').trim().toLowerCase(); }
+function daysLeft(ts){ return Math.max(0, Math.ceil((ts - Date.now())/86400000)); }
+
+/* ---------- SPLASH ANIMATION ---------- */
+(function runSplash(){
+  const letters = Array.from(BRAND_NAME);
+  const box = document.getElementById('logoLetters');
+  letters.forEach((ch,i)=>{
+    const span = document.createElement('span'); span.textContent=ch; box.appendChild(span);
+  });
+  setTimeout(()=>box.classList.add('ready'), 50);
+  // stagger reveal
+  Array.from(document.querySelectorAll('#logoLetters span')).forEach((el,i)=> setTimeout(()=> el.style.opacity=1, 120*i));
+  setTimeout(()=> document.getElementById('logoSub').classList.add('show'), 120*letters.length + 150);
+
+  // end splash -> show app
+  setTimeout(()=>{
+    document.getElementById('splash').style.display='none';
+    document.getElementById('app').style.display='flex';
+    initApp();
+  }, 120*letters.length + 900);
+})();
+
+/* ---------- INIT APP ---------- */
+function initApp(){
+  document.getElementById('brandTitle').textContent = BRAND_NAME;
+  // Role/Auth from localStorage
+  const storedRole = localStorage.getItem('role');
+  state.role = storedRole || 'viewer';
+  const storedUser = JSON.parse(localStorage.getItem('user')||'null');
+  state.user = storedUser;
+
+  updateAuthUI();
+
+  // First-time role chooser
+  if(!storedRole){
+    openModal('#roleModal');
+  }
+
+  // Nav handlers
+  Array.from(document.querySelectorAll('.tab')).forEach(tab=>{
+    tab.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const view = tab.dataset.view;
+      switchView(view);
+      Array.from(document.querySelectorAll('.tab')).forEach(t=>t.classList.toggle('active', t===tab));
+    });
+  });
+
+  // Auth modal
+  document.getElementById('openAuthBtn').onclick = ()=> openModal('#authModal');
+  document.getElementById('closeAuth').onclick = ()=> closeModal('#authModal');
+  document.getElementById('loginBtn').onclick = doLogin;
+  document.getElementById('signupBtn').onclick = doSignup;
+
+  // Role modal
+  document.getElementById('chooseDealer').onclick = ()=> chooseRole('dealer');
+  document.getElementById('chooseViewer').onclick = ()=> chooseRole('viewer');
+
+  // Search
+  document.getElementById('searchBtn').onclick = runSearch;
+  document.getElementById('clearSearchBtn').onclick = ()=>{
+    document.getElementById('brandSelect').value=''; document.getElementById('modelInput').value=''; switchView('home');
+  };
+
+  // Upload
+  document.getElementById('uPhotos').addEventListener('change', handlePhotos);
+  Array.from(document.querySelectorAll('#promoTiers .btn')).forEach(btn=> btn.addEventListener('click', ()=>{
+    const rank = +btn.dataset.rank;
+    state.chosenPromo = {rank};
+    toast(`Selected ${rank}\u1d57\u02b0 rank (₹${PRICING[rank]})`);
+  }));
+  document.getElementById('publishBtn').onclick = publishBuild;
+
+  // Profile
+  document.getElementById('logoutBtn').onclick = logout;
+  document.getElementById('switchRoleBtn').onclick = switchRole;
+
+  renderHome();
+  renderFeed();
+  renderProfile();
+}
+
+/* ---------- MODALS ---------- */
+function openModal(sel){ document.querySelector(sel).classList.add('show'); }
+function closeModal(sel){ document.querySelector(sel).classList.remove('show'); }
+
+/* ---------- AUTH (mock) ---------- */
+function doLogin(){
+  const id = (document.getElementById('authEmail').value||'').trim();
+  if(!id){ toast('Enter email/phone'); return; }
+  state.user = {id, name:id.split('@')[0]||'User', role:state.role};
+  localStorage.setItem('user', JSON.stringify(state.user));
+  closeModal('#authModal'); updateAuthUI(); toast('Logged in');
+}
+function doSignup(){ doLogin(); }
+function logout(){ state.user=null; localStorage.removeItem('user'); updateAuthUI(); toast('Logged out'); }
+
+function updateAuthUI(){
+  document.getElementById('roleBadge').textContent = (state.user? (state.user.role==='dealer'?'Dealer':'Viewer') : 'Guest');
+  document.getElementById('openAuthBtn').style.display = state.user ? 'none' : 'inline-flex';
+  // Gate upload if not dealer
+  const isDealer = (state.user?.role||state.role)==='dealer';
+  document.querySelector('#view-upload .h1').textContent = isDealer? 'Upload your build' : 'Upload (Dealers only)';
+  document.getElementById('publishBtn').disabled = !isDealer;
+}
+
+/* ---------- ROLE ---------- */
+function chooseRole(role){
+  state.role = role;
+  if(state.user){ state.user.role = role; localStorage.setItem('user', JSON.stringify(state.user)); }
+  localStorage.setItem('role', role);
+  closeModal('#roleModal');
+  updateAuthUI();
+  toast(`Role set to ${role}`);
+}
+function switchRole(){
+  const r = (state.user?.role || state.role)==='dealer' ? 'viewer' : 'dealer';
+  chooseRole(r);
+}
+
+/* ---------- VIEWS ---------- */
+function switchView(view){
+  ['home','search','feed','upload','profile'].forEach(v=> document.getElementById('view-'+v).style.display = (v===view)?'block':'none');
+  if(view==='home') renderHome();
+  if(view==='feed') renderFeed();
+  if(view==='profile') renderProfile();
+}
+
+/* ---------- RENDER: HOME ---------- */
+function renderHome(){
+  // Sponsored grid (from promotions)
+  const wrap = document.getElementById('sponsoredGrid'); wrap.innerHTML='';
+  const items = getTopPromoted('Maruti Suzuki','Ignis'); // demo for Ignis; real app: dynamic by user search
+  const cards = items.map(makeDealerCard);
+  if(cards.length===0){
+    wrap.innerHTML = `<div class="card meta">No sponsored dealers yet. Dealers can promote from Upload.</div>`;
+  }else{
+    cards.forEach(c=> wrap.appendChild(c));
+  }
+
+  // Trending builds
+  const tg = document.getElementById('trendingGrid'); tg.innerHTML='';
+  state.mockBuilds.slice(0,4).forEach(b=>{
+    const c = document.createElement('div'); c.className='card';
+    c.innerHTML = `
+      <img src="${b.photos[0]}" alt="">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+        <div><strong>${b.brand} ${b.model}</strong><div class="meta">${b.category}</div></div>
+        <button class="btn small" onclick="requireLogin(()=>toast('Opening chat…'))"><i class="bi bi-chat-dots"></i> Chat</button>
+      </div>
+    `;
+    tg.appendChild(c);
+  });
+}
+
+/* ---------- RENDER: FEED ---------- */
+function renderFeed(){
+  const list = document.getElementById('feedList'); list.innerHTML='';
+  state.mockBuilds.forEach(b=>{
+    const dealer = state.mockDealers.find(d=> d.id===b.dealerId);
+    const card = document.createElement('div'); card.className='card';
+    card.innerHTML = `
+      <div class="dealer" style="margin-bottom:10px">
+        <img src="${dealer.photo}" alt="">
+        <div><div><strong>${dealer.name}</strong> ${dealer.verified?'<span class="tag">Verified</span>':''}</div>
+             <div class="meta">${dealer.city} • ${b.brand} ${b.model} • ${timeAgo(b.createdAt)}</div></div>
+      </div>
+      <img src="${b.photos[0]}" alt="" style="border-radius:10px">
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn small" onclick="toast('Liked')"><i class="bi bi-heart"></i></button>
+        <button class="btn small" onclick="toast('Saved')"><i class="bi bi-bookmark"></i></button>
+        <button class="btn small" onclick="requireLogin(()=>toast('Opening chat…'))"><i class="bi bi-chat-dots"></i></button>
+      </div>
+      <div class="meta" style="margin-top:6px">${b.caption||''}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+/* ---------- RENDER: PROFILE ---------- */
+function renderProfile(){
+  const el = document.getElementById('profileInfo');
+  if(!state.user){
+    el.innerHTML = `You are browsing as <strong>${state.role}</strong>. Login to manage uploads, chat and promotions.`;
+    document.getElementById('promoList').innerHTML='';
+    return;
+  }
+  el.innerHTML = `Logged in as <strong>${state.user.name}</strong> • Role: <strong>${state.user.role}</strong>`;
+
+  // Promotions
+  const wrap = document.getElementById('promoList'); wrap.innerHTML='';
+  for(const key in state.promotions){
+    const slotset = state.promotions[key];
+    for(const r of [1,2,3]){
+      const p = slotset?.[r];
+      if(p && p.dealerId === (state.user.id||'me')){
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong>${p.brand} ${p.model}</strong><div class="meta">Rank ${r} • ₹${PRICING[r]} • ${daysLeft(p.endsAt)} days left</div></div>
+            <span class="tag s${r}">Sponsored</span>
+          </div>
+        `;
+        wrap.appendChild(card);
+      }
+    }
+  }
+}
+
+/* ---------- SEARCH ---------- */
+function runSearch(){
+  const brand = document.getElementById('brandSelect').value.trim();
+  const model = document.getElementById('modelInput').value.trim();
+  if(!brand || !model){ toast('Select a brand and enter model'); return; }
+  // Compose results: top promoted slots + organic
+  const promoted = getTopPromoted(brand, model);
+  const organic = state.mockDealers.filter(d=> !promoted.find(p=>p.id===d.id));
+  const results = [...promoted, ...organic];
+
+  document.getElementById('resultsInfo').textContent = `${brand} ${model} • ${results.length} dealers`;
+  const grid = document.getElementById('resultsGrid'); grid.innerHTML='';
+  results.forEach(d=> grid.appendChild(makeDealerCard(d, brand, model)));
+  switchView('search');
+}
+
+function getTopPromoted(brand, model){
+  const key = keyBrandModel(brand, model);
+  const set = state.promotions[key] || {};
+  // Return dealers in rank order
+  return [1,2,3].map(r=> set[r] ? state.mockDealers.find(d=> d.id===set[r].dealerId) && {...state.mockDealers.find(d=> d.id===set[r].dealerId), _rank:r, _promo:set[r]} : null).filter(Boolean);
+}
+
+function makeDealerCard(d, brand='Maruti Suzuki', model='Ignis'){
+  const wrap = document.createElement('div'); wrap.className='card';
+  const rank = d._rank;
+  const tag = rank? `<span class="tag s${rank}">${rank===1?'1st':' '+rank+'rd'} Rank</span>` : '';
+  const left = rank? daysLeft(d._promo.endsAt) : null;
+  wrap.innerHTML = `
+    <div class="dealer">
+      <img src="${d.photo}" alt="">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px">
+          <strong>${d.name}</strong> ${d.verified?'<span class="tag">Verified</span>':''} ${tag}
+        </div>
+        <div class="meta">${d.city} • ${d.rating}★ • ${brand} ${model} ${left!==null?('• '+left+'d left'):''}</div>
+      </div>
+      <button class="btn small" onclick="requireLogin(()=>toast('Opening chat…'))"><i class="bi bi-chat-dots"></i></button>
+    </div>
+  `;
+  return wrap;
+}
+
+/* ---------- UPLOAD ---------- */
+function handlePhotos(e){
+  const files = Array.from(e.target.files||[]);
+  document.getElementById('uCount').textContent = `${files.length} selected (need 10+)`;
+  const p = document.getElementById('uPreview'); p.innerHTML='';
+  files.slice(0,12).forEach(f=>{
+    const url = URL.createObjectURL(f);
+    const img = document.createElement('img'); img.src = url; p.appendChild(img);
+  });
+}
+
+function publishBuild(){
+  // auth + dealer check
+  const role = state.user?.role || state.role;
+  if(role!=='dealer'){ toast('Dealers only. Switch to Dealer in Profile.'); return; }
+  if(!state.user){ openModal('#authModal'); return; }
+
+  const brand = document.getElementById('uBrand').value.trim();
+  const model = document.getElementById('uModel').value.trim();
+  const category = document.getElementById('uCategory').value.trim();
+  const photos = document.getElementById('uPhotos').files;
+  if(!brand || !model || !category){ toast('Fill brand, model, category'); return; }
+  if(!photos || photos.length<10){ toast('Select at least 10 photos'); return; }
+
+  // Save mock build
+  state.mockBuilds.unshift({
+    id:'b'+Math.random().toString(36).slice(2,8),
+    dealerId: state.user.id||'me', brand, model, category,
+    photos: Array.from(photos).map(f=> URL.createObjectURL(f)),
+    caption: document.getElementById('uCaption').value.trim(),
+    createdAt: Date.now()
+  });
+
+  // Handle promotion if chosen
+  if(state.chosenPromo){
+    const rank = state.chosenPromo.rank;
+    const key = keyBrandModel(brand, model);
+    state.promotions[key] = state.promotions[key] || {};
+    // mock “payment”
+    const startsAt = Date.now();
+    const endsAt = startsAt + PROMO_DAYS*86400000;
+    state.promotions[key][rank] = {
+      dealerId: state.user.id||'me', brand, model, rank, price:PRICING[rank],
+      startsAt, endsAt, active:true
+    };
+    savePromos();
+    state.chosenPromo = null;
+    toast(`Promotion live: Rank ${rank} for ${brand} ${model}`);
+  } else {
+    toast('Build published');
+  }
+
+  // clear upload form
+  document.getElementById('uBrand').value=''; document.getElementById('uModel').value=''; document.getElementById('uCategory').value=''; document.getElementById('uCaption').value='';
+  document.getElementById('uPhotos').value=''; document.getElementById('uCount').textContent='0 selected (need 10+)'; document.getElementById('uPreview').innerHTML='';
+  renderFeed(); renderHome(); renderProfile();
+  switchView('feed');
+}
+
+/* ---------- HELPERS ---------- */
+function requireLogin(fn){
+  if(!state.user){ openModal('#authModal'); return; }
+  fn&&fn();
+}
+function timeAgo(ts){
+  const s = Math.floor((Date.now()-ts)/1000);
+  if(s<60) return `${s}s ago`;
+  const m = Math.floor(s/60); if(m<60) return `${m}m ago`;
+  const h = Math.floor(m/60); if(h<24) return `${h}h ago`;
+  const d = Math.floor(h/24); return `${d}d ago`;
+}
+</script>
+</body>
+</html>

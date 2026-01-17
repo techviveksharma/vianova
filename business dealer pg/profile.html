@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Create Dealer Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h1>Create Dealer Profile</h1>
+  <form id="dealerForm">
+    <input type="text" id="name" placeholder="Dealer Name" required><br>
+    <input type="text" id="location" placeholder="Location" required><br>
+    <input type="text" id="speciality" placeholder="Speciality" required><br>
+    <textarea id="about" placeholder="About Dealer" required></textarea><br>
+    <input type="url" id="photo" placeholder="Profile Photo URL"><br>
+    <button type="submit">Save Profile</button>
+  </form>
+
+  <script>
+document.getElementById('dealerForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  
+  let dealerData = {
+    name: document.getElementById('name').value,
+    location: document.getElementById('location').value,
+    speciality: document.getElementById('speciality').value,
+    about: document.getElementById('about').value,
+    photo: document.getElementById('photo').value
+  };
+
+  localStorage.setItem('dealerProfile', JSON.stringify(dealerData));
+
+  alert("Profile Saved! Redirecting to Dashboard...");
+  window.location.href = "index.html";
+});
+</script>
+
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  padding: 20px;
+}
+
+.dealer-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.dealer-card img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+input, textarea, button {
+  display: block;
+  margin: 10px auto;
+  padding: 8px;
+  width: 90%;
+}
+
+button {
+  background: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+</style>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Admin Panel</title><link rel='stylesheet' href='css/style.css'></head><body>
+<header>
+    <h1>Admin Panel</h1>
+</header>
+<nav>
+    <a href="index.html">Dashboard</a>
+    <a href="approve-dealers.html">Approve Dealers</a>
+    <a href="approve-uploads.html">Approve Car Uploads</a>
+    <a href="payment-analytics.html">Payment Analytics</a>
+    <a href="promote-dealers.html">Promote Top Dealers</a>
+</nav>
+
+<div class="container">
+    <h2>Payment Analytics</h2>
+    <canvas id="revenueChart" width="400" height="200"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+var ctx = document.getElementById('revenueChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        datasets: [{
+            label: 'Revenue (₹)',
+            data: [120000, 150000, 130000, 160000, 170000],
+            backgroundColor: 'rgba(0, 123, 255, 0.6)'
+        }]
+    }
+});
+</script>
+</body></html>

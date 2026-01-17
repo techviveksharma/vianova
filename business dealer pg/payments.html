@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Make a Payment</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .payment-box {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    .payment-box h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .payment-box input, .payment-box select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .payment-box button {
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .payment-box button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-box">
+    <h2>Payment Details</h2>
+    <form onsubmit="submitPayment(event)">
+      <input type="text" placeholder="Cardholder Name" required />
+      <input type="text" placeholder="Card Number" required maxlength="16" />
+      <input type="text" placeholder="MM/YY" required maxlength="5" />
+      <input type="text" placeholder="CVV" required maxlength="3" />
+      <input type="number" placeholder="Amount (₹)" required />
+      <button type="submit">Pay Now</button>
+    </form>
+  </div>
+
+  <script>
+    function submitPayment(e) {
+      e.preventDefault();
+      alert("Payment processed successfully!");
+      window.location.href = "index.html"; // Redirect after payment
+    }
+  </script>
+</body>
+</html>

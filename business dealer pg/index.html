@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dealer Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #e0f7fa);
+      color: #333;
+    }
+
+    nav {
+      background: linear-gradient(to right, #0077b6, #00b4d8);
+      color: white;
+      padding: 50px 40px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    nav h1 {
+      margin: 0;
+      font-size: 50px;
+      font-weight: 600;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 20px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 800;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .main {
+      padding: 50px 40px;
+      text-align: center;
+    }
+
+    .main h2 {
+      font-size: 52px;
+      color: #0077b6;
+      margin-bottom: 10px;
+    }
+
+    .main p {
+      font-size: 28px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>Dealer Dashboard</h1>
+    <ul>
+      <li><a href="upload.html">Upload Project</a></li>
+      <li><a href="uploads.html">My Uploads</a></li>
+      <li><a href="payments.html">Payments</a></li>
+      <li><a href="profile.html">Dealer's Profile</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </nav>
+  <section class="main">
+    <h2>Welcome, Dealer!</h2>
+    <p>Select an action from the navigation menu above.</p>
+  </section>
+</body>
+</html>

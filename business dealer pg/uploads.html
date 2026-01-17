@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Car Project Upload & View</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f0f8ff;
+      padding: 40px 20px;
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #0077b6;
+    }
+
+    .upload-form {
+      background-color: #ffffff;
+      max-width: 500px;
+      margin: 0 auto 50px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-form input,
+    .upload-form textarea,
+    .upload-form button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .upload-form input[type="file"] {
+      padding: 8px;
+      background-color: #e6f7ff;
+      border: 1px dashed #0077b6;
+    }
+
+    .upload-form button {
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .upload-form button:hover {
+      background-color: #005f8e;
+    }
+
+    .uploads-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .upload-card {
+      background-color: white;
+      border-radius: 10px;
+      width: 250px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .upload-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .upload-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .upload-card h3 {
+      margin: 15px;
+      font-size: 18px;
+      color: #0077b6;
+    }
+
+    .upload-card p {
+      margin: 0 15px 15px;
+      color: #444;
+    }
+
+    @media (max-width: 600px) {
+      .upload-form {
+        padding: 20px;
+      }
+      .upload-card {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Upload New Car Project</h2>
+  <form class="upload-form">
+    <input type="text" placeholder="Car Name" required />
+    <input type="text" placeholder="Car Model" required />
+    <textarea placeholder="Description"></textarea>
+    <input type="number" placeholder="Rank (1-10)" min="1" max="10" />
+    <label>Select up to 10 images:</label>
+    <input type="file" multiple accept="image/*" />
+    <button type="submit">Upload</button>
+  </form>
+
+  <h2>My Uploaded Projects</h2>
+  <div class="uploads-container">
+    <div class="upload-card">
+      <img src="https://via.placeholder.com/250x160" alt="Car" />
+      <h3>Mustang - GT</h3>
+      <p>Rank: 9</p>
+    </div>
+    <div class="upload-card">
+      <img src="https://via.placeholder.com/250x160" alt="Car" />
+      <h3>Lamborghini - Aventador</h3>
+      <p>Rank: 10</p>
+    </div>
+    <!-- Add more cards as needed -->
+  </div>
+
+</body>
+</html>

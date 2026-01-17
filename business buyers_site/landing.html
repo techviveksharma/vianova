@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Platform Landing Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(180deg, #0a0a0a, #141414);
+        color: white;
+        text-align: center;
+        overflow-x: hidden;
+    }
+    /* BIG TITLE */
+    h1 {
+        font-size: 4.5rem;
+        margin: 20px 0;
+        background: linear-gradient(90deg, #566fc9ff, #00e5ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+        text-shadow: 0 0 15px rgba(11, 11, 124, 0.6);
+        animation: fadeSlide 1.5s ease-out forwards;
+        opacity: 0;
+    }
+    @keyframes fadeSlide {
+        0% { opacity: 0; transform: translateY(-30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SLIDESHOW */
+    .slideshow-container {
+        position: relative;
+        max-width: 100%;
+        height: 450px;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+    .slides {
+        width: 100%;
+        height: 450px;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+    .slides.active {
+        opacity: 1;
+    }
+    /* Dark overlay for better visibility */
+    .slideshow-container::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+        pointer-events: none;
+    }
+
+    /* DEALER OR BUYER */
+    .role-selector {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+    .role-card {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 20px 40px;
+        border-radius: 15px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+         transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        border: 1px solid rgba(255, 77, 77, 0.3);
+        backdrop-filter: blur(10px);
+    }
+    .role-card:hover {
+        transform: scale(1.1);
+        background: rgba(255, 77, 77, 0.2);
+        box-shadow: 0 0 20px rgba(255,77,77,0.6);
+        border-color: rgba(255, 77, 77, 0.7);
+    }
+</style>
+
+</head>
+<body>
+
+<h1>VIANOVA</h1>
+
+<!-- SLIDESHOW -->
+<div class="slideshow-container">
+    <img class="slides active" src="images/image.png" alt="Car Mod 1">
+    <img class="slides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo8jho6bFsGg5Ejd0KmOvzcC9otGbCyxqLew&s" alt="Car Mod 2">
+    <img class="slides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhl0oVjsHuwORleErvZmljKr3Kt0EICAowYA&s" alt="Car Mod 3">
+</div>
+
+<!-- ROLE SELECTOR -->
+<div class="role-selector">
+    <div class="role-card" onclick="selectRole('Dealer')">🚗 Dealer</div>
+    <div class="role-card" onclick="selectRole('Buyer')">🛒 Buyer</div>
+</div>
+
+<script>
+    // CROSSFADE SLIDESHOW SCRIPT
+    let slideIndex = 0;
+    const slides = document.querySelectorAll(".slides");
+
+    function showSlides() {
+        slides.forEach((slide, index) => {
+            slide.classList.remove("active");
+            if (index === slideIndex) slide.classList.add("active");
+        });
+        slideIndex = (slideIndex + 1) % slides.length;
+        setTimeout(showSlides, 3000);
+    }
+    showSlides();
+
+    // ROLE SELECT FUNCTION
+    function selectRole(role) {
+        localStorage.setItem("userRole", role);
+        alert("You selected: " + role);
+        // Redirect to homepage
+        window.location.href = "buyer_signup.html";
+    }
+</script>
+
+</body>
+</html>

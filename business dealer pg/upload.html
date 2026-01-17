@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upload Car Project</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #f2f4f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .upload-container {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px 40px;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .upload-form input[type="text"],
+    .upload-form input[type="number"],
+    .upload-form textarea,
+    .upload-form input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .upload-form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .upload-form label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .upload-form button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0066ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .upload-form button:hover {
+      background-color: #004cc9;
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <h2>Upload New Car Project</h2>
+    <form class="upload-form">
+      <input type="text" placeholder="Car Name" required />
+      <input type="text" placeholder="Car Model" required />
+      <textarea placeholder="Description"></textarea>
+      <input type="number" placeholder="Rank (1-10)" min="1" max="10" />
+      <label>Select up to 10 images:</label>
+      <input type="file" multiple accept="image/*" />
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+</body>
+</html>

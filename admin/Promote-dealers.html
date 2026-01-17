@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Promote Dealers</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <h2>Promote Dealers</h2>
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="dealerTable"></tbody>
+  </table>
+
+<script>
+  const token = localStorage.getItem('adminToken');
+  if (!token) window.location.href = 'index.html';
+
+  async function loadDealers() {
+    try {
+      const res = await fetch('http://localhost:5000/api/admin/all-dealers', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const dealers = await res.json();
+      const table = document.getElementById('dealerTable');
+      table.innerHTML = '';
+
+      dealers.forEach(d => {
+        table.innerHTML += `
+          <tr>
+            <td>${d.name}</td>
+            <td>${d.email}</td>
+            <td>
+              ${d.promoted
+                ? '<span class="badge bg-success">Promoted</span>'
+                : '<span class="badge bg-secondary">Not Promoted</span>'}
+            </td>
+            <td>
+              <button class="btn btn-warning btn-sm" onclick="togglePromotion('${d._id}', ${d.promoted})">
+                ${d.promoted ? 'Unpromote' : 'Promote'}
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    } catch (error) {
+      console.error('Error loading dealers:', error);
+      alert('Failed to load dealers.');
+    }
+  }
+
+  async function togglePromotion(id, isPromoted) {
+    try {
+      await fetch(`http://localhost:5000/api/admin/promote-dealer/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ promoted: !isPromoted })
+      });
+      loadDealers();
+    } catch (error) {
+      console.error('Error updating promotion status:', error);
+      alert('Failed to update promotion status.');
+    }
+  }
+
+  loadDealers();
+</script>
+</body>
+</html>

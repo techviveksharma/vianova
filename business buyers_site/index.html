@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ModCraft - Buyer Home</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <h1 class="brand">ModCraft</h1>
+    <nav class="topnav">
+      <a href="buyer_signup.html">Sign up</a>
+      <a href="buyer_login.html">Login</a>
+      <a href="chat.html">Chat</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="search-bar">
+    <input id="searchInput" placeholder="Search by car model or name..." />
+    <select id="filterRank">
+      <option value="">All ranks</option>
+      <option value="1">Rank 1</option>
+      <option value="2">Rank 2</option>
+      <option value="3">Rank 3</option>
+      <option value="4">Rank 4</option>
+      <option value="5">Rank 5</option>
+    </select>
+  </section>
+
+  <section id="feed" class="cards"></section>
+</main>
+
+<script src="buyer_app.js"></script>
+</body>
+</html>
